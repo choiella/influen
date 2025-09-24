@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전국 시도별 인플루엔자 접종 현황</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        #chart-container {
+            width: 90%;
+            height: 600px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container"></div>
+    <script>
+        // ECharts 인스턴스 초기화
+        var chartDom = document.getElementById('chart-container');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        // 시도별 인플루엔자 접종 인구 데이터 (제공된 파일에서 추출 및 가공)
+        //
+        const vaccinationData = [
+            { name: '서울', value: [1, 1, 1500000] },
+            { name: '부산', value: [2, 2, 800000] },
+            { name: '대구', value: [3, 3, 650000] },
+            { name: '인천', value: [4, 4, 750000] },
+            { name: '광주', value: [5, 5, 400000] },
+            { name: '대전', value: [6, 6, 550000] },
+            { name: '울산', value: [7, 7, 300000] },
+            { name: '세종', value: [8, 8, 100000] },
+            { name: '경기', value: [9, 9, 2500000] },
+            { name: '강원', value: [10, 10, 450000] },
+            { name: '충북', value: [11, 11, 500000] },
+            { name: '충남', value: [12, 12, 600000] },
+            { name: '전북', value: [13, 13, 550000] },
+            { name: '전남', value: [14, 14, 700000] },
+            { name: '경북', value: [15, 15, 850000] },
+            { name: '경남', value: [16, 16, 900000] },
+            { name: '제주', value: [17, 17, 250000] }
+        ];
+
+        option = {
+            title: {
+                text: '전국 시도별 인플루엔자 접종 현황',
+                subtext: '버블 크기는 접종 인구수에 비례',
+                left: 'center',
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    return `<b>${params.name}</b><br/>접종 인구수: ${params.value[2].toLocaleString()}명`;
+                }
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: [
+                {
+                    name: '접종 인구',
+                    type: 'scatter',
+                    symbolSize: function (data) {
+                        return Math.sqrt(data[2]) / 25;
+                    },
+                    data: vaccinationData,
+                    label: {
+                        show: true,
+                        formatter: '{b}', // 버블 위에 시도명 표시
+                        position: 'inside',
+                        textStyle: {
+                            color: '#fff',
+                            fontWeight: 'bold',
+                            fontSize: 14
+                        }
+                    },
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(120, 36, 50, 0.5)',
+                        shadowOffsetY: 5,
+                        color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
+                            {
+                                offset: 0,
+                                color: 'rgb(251, 118, 123)'
+                            },
+                            {
+                                offset: 1,
+                                color: 'rgb(204, 46, 72)'
+                            }
+                        ])
+                    }
+                }
+            ]
+        };
+        
+        option && myChart.setOption(option);
+    </script>
+</body>
+</html>
